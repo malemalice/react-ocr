@@ -3,7 +3,7 @@ import { Upload, Icon, message } from 'antd';
 import UploadedImages from '../contexts/UploadedImages'
 import useAxios from '../hooks/useAxios'
 import useUrlBuilder from '../hooks/useUrlBuilder'
-
+import { vision } from '../env'
 const { Dragger } = Upload;
 
 const FileUpload = () => {
@@ -70,7 +70,7 @@ const FileUpload = () => {
             ocrSend({
               url:endpoint,
               params:{
-                key:"AIzaSyAU3BtmLPckd1-oj66CeZE86PaNqjAL5bY",
+                key:vision.api_key,
               },
               data:{
                 requests:[
