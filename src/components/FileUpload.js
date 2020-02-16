@@ -8,7 +8,7 @@ const { Dragger } = Upload;
 
 const FileUpload = () => {
   const uploaded = useContext(UploadedImages)
-  const { images, setUploadedImages } = uploaded
+  const { loading, setUploadedImages } = uploaded
 
   const [ocrState, ocrSend] = useAxios({
     url: `images:annotate`,
@@ -32,8 +32,6 @@ const FileUpload = () => {
         boundings:[]
     }
     raw.map((item,index)=>{
-      // console.log(item.description)
-      // console.log(item.boundingPoly.vertices)
       if(index>0){
         results.texts.push(item.description)
         results.boundings.push(preFormat(item.boundingPoly.vertices))
@@ -42,26 +40,33 @@ const FileUpload = () => {
     return results
   }
 
+  const messageKey = 'loadingMsg';
+
+  const onLoading = () => {
+      message.loading({
+        content:'Analyzing image..',
+        duration:0,
+        key:messageKey
+      });
+  };
+
   const props = {
     name: 'file',
-    multiple: true,
+    multiple: false,
     accept: ".png,.jpeg,.jpg",
     showUploadList: false,
+    disabled: loading,
     beforeUpload:(file) => {
+        onLoading(true)
+        // onLoading(false)
+
+        setUploadedImages({
+          loading:true
+        })
         const reader = new FileReader();
 
         reader.onload = e => {
-            // console.log(e)
             const base64 = e.target.result.toString().replace(/^data:(.*,)?/, '')
-            // images.push({
-            //   base64,
-            //   ocrResults:'',
-            //   createdAt: new Date()
-            // })
-            // setUploadedImages((prev)=>({
-            //   ...prev,
-            //   images
-            // }))
             ocrSend({
               url:endpoint,
               params:{
@@ -82,24 +87,28 @@ const FileUpload = () => {
                 ]
               }
             },(res)=>{
-              // console.log(tidyResults(res.responses[0].textAnnotations))
               console.log(res)
-              setUploadedImages({images:{
+              setUploadedImages({
+                loading:false,
                 base64,
                 ocrResultsRaw:res.responses[0],
                 ocrResults:tidyResults(res.responses[0].textAnnotations),
                 createdAt: new Date()
-              }})
-              // images.push({
-              //   base64,
-              //   ocrResultsRaw:res.responses[0],
-              //   // ocrResults:tidyResults(res.responses[0].textAnnotations),
-              //   createdAt: new Date()
-              // })
+              })
               console.log(new Date())
-              message.success(`file uploaded successfully.`);
+              message.success({
+                content:`action done successfully.`,
+                key:messageKey
+              });
             },(e)=>{
               console.log(e)
+              setUploadedImages({
+                loading:false
+              })
+              message.error({
+                content:`Ops, Something wrong`,
+                key:messageKey
+              });
             })
 
 
@@ -128,10 +137,9 @@ const FileUpload = () => {
     <p className="ant-upload-drag-icon">
       <Icon type="inbox" />
     </p>
-    <p className="ant-upload-text">Click or drag file to this area to upload</p>
+    <p className="ant-upload-text">Click or drag image to this area to start analyze</p>
     <p className="ant-upload-hint">
-      Support for a single or bulk upload. Strictly prohibit from uploading company data or other
-      band files
+      Only accept jpeg,jpg and png files.
     </p>
   </Dragger>
   )
