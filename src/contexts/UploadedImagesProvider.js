@@ -7,22 +7,35 @@ const UploadedImagesProvider = ({ children }) => {
    * User details state / controls
    */
   const setUploadedImages = ({
-    images
+    base64,
+    ocrResultsRaw,
+    ocrResults,
+    loading,
+    createdAt
   }) => {
     updateUploaded(prevState => {
-      console.log(prevState)
-      let newImage = {
-        images: uploaded.images.concat(images)
-      }
+      // console.log(prevState)
+      // let newImage = {
+      //   images: uploaded.images.concat(images)
+      // }
       return {
         ...prevState,
-        ...newImage
+        base64,
+        ocrResultsRaw,
+        ocrResults,
+        loading,
+        createdAt
       }
     })
   }
 
   const imagesState = {
     images:[],
+    base64:'',
+    ocrResultsRaw:'',
+    ocrResults:'',
+    loading:false,
+    createdAt: '',
     setUploadedImages
   }
 
