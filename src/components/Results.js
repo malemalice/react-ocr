@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Collapse, notification, Skeleton, Row, Col } from 'antd';
 import UploadedImages from '../contexts/UploadedImages'
-import Boundingbox from 'react-bounding-box'
+import Boundingbox from 'react-bbox'
 
 const { Panel } = Collapse;
 

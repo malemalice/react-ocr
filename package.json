@@ -8,7 +8,7 @@
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
     "react": "^16.12.0",
-    "react-bounding-box": "https://github.com/malemalice/react-bounding-box@v0.5.15",
+    "react-bbox": "^0.5.16",
     "react-dom": "^16.12.0",
     "react-scripts": "^3.4.0"
   },
